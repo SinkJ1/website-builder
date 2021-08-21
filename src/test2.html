@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>НС1</title>
+
+	
+</head>
+<body>
+	
+	<canvas id="canv" style="display: block;">Ваш браузер устарел, обновитесь.</canvas>
+
+	<script>
+		function DCanvas(el)
+		{
+			const ctx = el.getContext('2d');
+			const pixel = 20;
+
+			let is_mouse_down = false;
+
+			canv.width = 500;
+			canv.height = 500;
+
+
+			this.clear = function() {
+				ctx.clearRect(0, 0, canv.width, canv.height);
+			}
+
+			el.addEventListener('mousedown', function(e) {
+				is_mouse_down = true;
+				ctx.beginPath();
+			})
+
+			el.addEventListener('mouseup', function(e) {
+				is_mouse_down = false;
+			})
+
+			el.addEventListener('mousemove', function(e) {
+				if( is_mouse_down )
+				{
+					ctx.fillStyle = 'blue';
+					ctx.strokeStyle = 'blue';
+					ctx.lineWidth = pixel;
+
+					ctx.lineTo(e.offsetX, e.offsetY);
+					ctx.stroke();
+
+					ctx.beginPath();
+					ctx.arc(e.offsetX, e.offsetY, pixel / 2, 0, Math.PI * 2);
+					ctx.fill();
+
+					ctx.beginPath();
+					ctx.moveTo(e.offsetX, e.offsetY);
+				}
+			})
+		}
+
+		let vector = [];
+		let net = null;
+		let train_data = [];
+
+		const d = new DCanvas(document.getElementById('canv'));
+
+		document.addEventListener('keypress', function(e) {
+			if( e.key.toLowerCase() == 'c' )
+			{
+				d.clear();
+			}
+		});
+	</script>
+
+</body>
+</html>
