@@ -56,7 +56,7 @@ const SimpleCanvasExample: React.FC<{}> = () => {
     const p = w / 20;
 
     const xStep = w / p;
-    const yStep = h / p;
+    const yStep = h / p
 
     for( let x = 0; x < w; x += xStep )
     {
@@ -101,6 +101,7 @@ const SimpleCanvasExample: React.FC<{}> = () => {
 
 				const xStep = w / p;
 				const yStep = h / p;
+        const coords = []
 
 				const vector = [];
 				let __draw = [];
@@ -132,19 +133,25 @@ const SimpleCanvasExample: React.FC<{}> = () => {
 						{
 							__draw.push([x, y, xStep, yStep]);
 						}
-
+            if(nonEmptyPixelsCount > 1){
+              coords.push({x:x, y:y})
+            }
 						vector.push(nonEmptyPixelsCount > 1 ? 1 : 0);
 					}
 				}
-      }
-      console.log(vector.length)
-      let counter = 0;
-      for(let i = 0; i < vector.length; i++){
-        if(vector[i] === 1){
-          counter++;
+
+
+        for(let i = 0; i < coords.length; i++){          
+          ctx!.fillStyle = 'blue';
+          ctx!.strokeStyle = 'blue';
+          ctx!.lineJoin = 'miter';
+          ctx!.lineWidth = 1;
+          ctx!.rect(coords[i].x, coords[i].y, p, p);
+          ctx!.fill();
         }
+
       }
-      console.log(counter)
+
   }
 
   return <>
