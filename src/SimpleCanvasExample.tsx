@@ -1,8 +1,27 @@
 import React, { useRef } from 'react';
 import { useEffect } from 'react';
+import Redux from 'redux'
 import { useState } from 'react';
+import { addElement, changeElement, Element, ElementAction } from './store/page/actions';
+import { ElementConfig } from './store/page/reducers';
+import { AppState } from './store/types';
+import { connect } from "react-redux"
 
-const SimpleCanvasExample: React.FC<{}> = () => {
+
+interface StateToProps {
+  elements: ElementConfig
+}
+
+interface DispatchToProps {
+  addElement: (element: Element) => void,
+  changeElement: (element: Element) => void,
+}
+
+
+
+type Props = StateToProps & DispatchToProps
+
+const SimpleCanvasExample = ({ elements, changeElement, addElement }: Props) => {
   let canvasRef = useRef<HTMLCanvasElement | null>(null);
   let canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
 
@@ -136,10 +155,10 @@ const SimpleCanvasExample: React.FC<{}> = () => {
             if(nonEmptyPixelsCount > 1){
               coords.push({x:x, y:y})
             }
+            console.log(coords)
 						vector.push(nonEmptyPixelsCount > 1 ? 1 : 0);
 					}
 				}
-
 
         for(let i = 0; i < coords.length; i++){          
           ctx!.fillStyle = 'blue';
@@ -150,6 +169,19 @@ const SimpleCanvasExample: React.FC<{}> = () => {
           ctx!.fill();
         }
 
+        const figureWidth = coords[coords.length - 1].x - coords[0].x
+        const figureHeight = coords[coords.length - 1].y - coords[0].y
+
+        addElement({
+          id:1,
+          name:'div',
+          value:'',
+          style: {
+            height:`${figureHeight === 0? p : figureHeight}px`,
+            width:`${figureWidth? p : figureWidth}px`,
+            backgroundColor:"blue"
+          }
+        })
       }
 
   }
@@ -160,4 +192,15 @@ const SimpleCanvasExample: React.FC<{}> = () => {
   </>;
 };
 
-export default SimpleCanvasExample;
+const mapStateToProps = (state: AppState): StateToProps => ({
+  elements: state.elements
+})
+
+const mapDispatchToProps = (dispatch: Redux.Dispatch<ElementAction>): DispatchToProps => ({
+  addElement: (element: Element) => dispatch(addElement(element)),
+  changeElement: (element: Element) => dispatch(changeElement(element)),
+})
+
+
+
+export default connect<StateToProps, DispatchToProps, any, AppState>(mapStateToProps, mapDispatchToProps)(SimpleCanvasExample)

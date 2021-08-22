@@ -1,20 +1,21 @@
 import React from 'react';
-import Grid from './Grid';
+import { Provider } from 'react-redux';
 import SimpleCanvasExample from './SimpleCanvasExample';
+import BuildedPage from './BuildedPage'
 
-const style:any = {
-  height: "400px",
-  width: "400px",
-  border : "1px solid black",
-  position: "absolute",
+interface Props {
+  store: any
 }
 
-function App() {
+function App({ store }: Props) {
 
 
   return (
     <>
+    <Provider store={store}>
         <SimpleCanvasExample/>
+        <BuildedPage/>
+    </Provider>
     </>
   );
 }
